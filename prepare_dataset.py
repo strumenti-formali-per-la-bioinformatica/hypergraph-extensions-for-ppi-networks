@@ -7,6 +7,7 @@ import torch_geometric.utils
 from itertools import combinations
 import networkx as nx
 import pickle
+import os.path as osp
 
 def parse_graph(data):
     G = nx.from_scipy_sparse_array(torch_geometric.utils.to_scipy_sparse_matrix (data.edge_index))
@@ -24,10 +25,13 @@ def parse_graph(data):
     return edge_index
 
 def main():
-    data_train = torch_geometric.datasets.PPI(root='PPI', split='train')
-    pickle.dump(parse_graph(data_train), open("train_edge_index_aa.pkl", "wb"))
-    data_val = torch_geometric.datasets.PPI(root='PPI', split='val')
-    pickle.dump(parse_graph(data_val), open("val_edge_index_aa.pkl", "wb"))
-    data_test = torch_geometric.datasets.PPI(root='PPI', split='test')
-    pickle.dump(parse_graph(data_test), open("test_edge_index_aa.pkl", "wb"))
+    path = osp.join(osp.dirname(osp.realpath(__file__)), 'data', 'PPI')
+    data_train = torch_geometric.datasets.PPI(root=path, split='train')
+    pickle.dump(parse_graph(data_train), open("data/train_edge_index_aa.pkl", "wb"))
+    data_val = torch_geometric.datasets.PPI(root=path, split='val')
+    pickle.dump(parse_graph(data_val), open("data/val_edge_index_aa.pkl", "wb"))
+    data_test = torch_geometric.datasets.PPI(root=path, split='test')
+    pickle.dump(parse_graph(data_test), open("data/test_edge_index_aa.pkl", "wb"))
 
+if __name__ == '__main__':
+    main()
