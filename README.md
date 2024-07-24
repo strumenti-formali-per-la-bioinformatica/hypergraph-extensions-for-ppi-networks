@@ -37,9 +37,16 @@ Al fine di trasformare il grafo in un ipergrafo utilizzando la tecnica descritta
 
 Per eseguire gli esperimenti per il task di *function-prediction* utilizzando il modello basato su *Graph Convolutional Network* descritto nella relazione di progetto:
 
-```
+```bash
 python3 function_prediction.py --model gcn
+python3 function_prediction.py --model hypergcn
 ```
 
+### Link Prediction
+
+```bash
+python3 link_prediction24.py --model gcn
+python3 link_prediction24.py --model hypergcn
+```
 
 

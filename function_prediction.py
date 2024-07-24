@@ -59,9 +59,9 @@ def main(model_name: str):
     auc_moving_average = 0
     print('Start training')
 
-    train_edge_index = torch.tensor(pickle.load(open('data/train_edge_index_aa.pkl', 'rb')))
-    val_edge_index = torch.tensor(pickle.load(open('data/val_edge_index_aa.pkl', 'rb')))
-    test_edge_index = torch.tensor(pickle.load(open('data/test_edge_index_aa.pkl', 'rb')))
+    train_edge_index = torch.tensor(pickle.load(open('data/train_edge_index.pkl', 'rb')))
+    val_edge_index = torch.tensor(pickle.load(open('data/val_edge_index.pkl', 'rb')))
+    test_edge_index = torch.tensor(pickle.load(open('data/test_edge_index.pkl', 'rb')))
 
     X_train, edge_index_train, y_train = data_train.x, data_train.edge_index, data_train.y
     X_val, edge_index_val, y_val = data_val.x, data_val.edge_index, data_val.y

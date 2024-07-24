@@ -12,4 +12,4 @@ def plot_results(history):
     ax[1].set_xlabel('Epoch')
     ax[1].set_ylabel('AUC')
     ax[1].legend()
-    plt.savefig('history.png')
+    plt.savefig('plots/history.png')

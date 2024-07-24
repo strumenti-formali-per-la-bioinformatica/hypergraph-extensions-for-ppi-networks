@@ -28,11 +28,11 @@ def parse_graph(data, score_function):
 def main():
     path = osp.join(osp.dirname(osp.realpath(__file__)), 'data', 'PPI')
     data_train = torch_geometric.datasets.PPI(root=path, split='train')
-    pickle.dump(parse_graph(data_train), open("data/train_edge_index_aa.pkl", "wb"))
+    pickle.dump(parse_graph(data_train), open("data/train_edge_index.pkl", "wb"))
     data_val = torch_geometric.datasets.PPI(root=path, split='val')
-    pickle.dump(parse_graph(data_val), open("data/val_edge_index_aa.pkl", "wb"))
+    pickle.dump(parse_graph(data_val), open("data/val_edge_index.pkl", "wb"))
     data_test = torch_geometric.datasets.PPI(root=path, split='test')
-    pickle.dump(parse_graph(data_test), open("data/test_edge_index_aa.pkl", "wb"))
+    pickle.dump(parse_graph(data_test), open("data/test_edge_index.pkl", "wb"))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
