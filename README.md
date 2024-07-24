@@ -4,7 +4,17 @@ Nel corso degli ultimi anni lo sviluppo del *deep learning geometrico* ha portat
 
 In questo lavoro, si andrà a considerare un possibile metodo per arricchire i grafi utilizzando i pattern strutturali nascosti per migliorare le performance di diversi task applicati ad essi; in particolare ci focalizzeremo sulle PPI network, i cui nodi rappresentano delle proteine e gli archi descrivono una interazione o una certa soglia di similarità tra le proteine. Lo scopo è enfatizzare l'importanza dei motif, e più nello specifico di questo lavoro, le clique di diversa taglia, come pattern strutturale per le reti biologiche.
 
-![Multi-Layer Network](assets/multi-layer-network.png)
+<table border="0">
+    <tr>
+        <td>
+            <img src="assets/multi-layer-network.png" alt="Multi-Layer Network">
+        </td>
+        <td>
+            <img src="assets/hypergraph.png" alt="Multi-Layer Network">
+        </td>
+    </tr>
+</table>
+
 
 ## Installazione
 
