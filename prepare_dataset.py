@@ -8,11 +8,12 @@ from itertools import combinations
 import networkx as nx
 import pickle
 import os.path as osp
+import argparse
 
-def parse_graph(data):
+def parse_graph(data, score_function):
     G = nx.from_scipy_sparse_array(torch_geometric.utils.to_scipy_sparse_matrix (data.edge_index))
     cliques = [clique for clique in nx.find_cliques(G)]
-    jc = np.array([sum(map(lambda i: i [2], nx.adamic_adar_index(G, list(combinations(clique, 2))))) / len(clique) for clique in cliques])
+    jc = np.array([sum(map(lambda i: i [2], score_function(G, list(combinations(clique, 2))))) / len(clique) for clique in cliques])
     score_mean = jc.mean()
     hyperedges = [clique for clique, score in zip(cliques, jc) if score > score_mean]
     # hyperedges = cliques
@@ -34,4 +35,17 @@ def main():
     pickle.dump(parse_graph(data_test), open("data/test_edge_index_aa.pkl", "wb"))
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--score_function', type=str, choices=['jc', 'aa', 'ra'], required=True)
+    args = parser.parse_args()
+
+    score_function = args.score_function
+
+    if score_function == 'jc':
+        score_function = nx.jaccard_coefficient
+    elif score_function == 'aa':
+        score_function = nx.adamic_adar_index
+    elif score_function == 'ra':
+        score_function = nx.resource_allocation_index
+
+    main(score_function)

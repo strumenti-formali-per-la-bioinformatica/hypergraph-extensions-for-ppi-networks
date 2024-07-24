@@ -128,7 +128,7 @@ def main(model_name: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Function Prediction')
-    parser.add_argument('--model', type=str, default='gcn', help='Model to use', choices=['gcn', 'hypergcn'], required=True)
+    parser.add_argument('--model', type=str, help='Model to use', choices=['gcn', 'hypergcn'], required=True)
     
     args = parser.parse_args()
 

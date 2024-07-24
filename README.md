@@ -29,5 +29,17 @@ conda install pyg -c pyg
 
 ## Riproduzione degli esperimenti
 
-Al fine di trasformare il grafo in un ipergrafo utilizzando la tecnica descritta in questo progetto, eseguire il comando `python3 prepare_dataset.py`.
+Nel caso del task di *function-prediction*, occorre prima di tutto lanciare lo script per scaricare e generare un ipergrafo a partire dal dataset di riferimento.
+
+### Function Prediction
+
+Al fine di trasformare il grafo in un ipergrafo utilizzando la tecnica descritta in questo progetto, eseguire il comando `python3 prepare_dataset.py`, specificando l'indice da utilizzare per la previsione (*jc*, *aa*, *ra*).
+
+Per eseguire gli esperimenti per il task di *function-prediction* utilizzando il modello basato su *Graph Convolutional Network* descritto nella relazione di progetto:
+
+```
+python3 function_prediction.py --model gcn
+```
+
+
 
