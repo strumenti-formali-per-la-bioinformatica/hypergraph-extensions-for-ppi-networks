@@ -59,9 +59,10 @@ def main(model_name: str):
                 },
             }
             if model_name == 'gcn':
-                model = LP_GCN(train_data.num_features, 128, 256).to(device)
+                model = LP_GCN(train_data.num_features, 128, 256)
             elif model_name == 'hypergcn':
-                model = LP_HyperGCN(train_data.num_features, 128, 256).to(device)
+                model = LP_HyperGCN(train_data.num_features, 128, 256)
+            model.to(device)
 
             best_loss = float('inf')
             best_model = None
@@ -72,7 +73,7 @@ def main(model_name: str):
             for epoch in range(50):
                 model.train()
                 optimizer.zero_grad()
-                _, y = model(train_data.x.to(device), train_data.edge_index.to(device), edge_index)
+                _, y = model(train_data.x.to(device), train_data.edge_index.to(device), edge_index.to(device))
                 y = y.to("cpu")
                 y = y @ y.t()
                 loss = criterion(y[train_data.edge_label_index[0], train_data.edge_label_index[1]], train_data.edge_label)
@@ -84,7 +85,7 @@ def main(model_name: str):
                 history["train"]["roc_auc"].append(roc_auc)
                 model.eval()
                 with torch.no_grad():
-                    _, y = model(val_data.x.to(device), val_data.edge_index.to(device), edge_index)
+                    _, y = model(val_data.x.to(device), val_data.edge_index.to(device), edge_index.to(device))
                     y = y.to("cpu")
                     y = y @ y.t()
                     val_loss = criterion(y[val_data.edge_label_index[0], val_data.edge_label_index[1]], val_data.edge_label)
@@ -108,7 +109,7 @@ def main(model_name: str):
             with torch.no_grad():
                 model.load_state_dict(best_model)
                 model.eval()
-                _, y = model(test_data.x.to(device), test_data.edge_index.to(device), edge_index)
+                _, y = model(test_data.x.to(device), test_data.edge_index.to(device), edge_index.to(device))
                 y = y.to("cpu")
                 y = y @ y.t()
                 y = torch.sigmoid(y)
@@ -120,7 +121,7 @@ def main(model_name: str):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='hypergcn', help='Model to use')
+    parser.add_argument('--model', type=str, default='hypergcn', help='Model to use', required=True, choices=['gcn', 'hypergcn'])
     args = parser.parse_args()
     model_name = args.model
     main(model_name)
