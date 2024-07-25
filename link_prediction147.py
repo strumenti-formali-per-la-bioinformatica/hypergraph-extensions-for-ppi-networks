@@ -67,10 +67,10 @@ def main(model_name: str):
             best_loss = float('inf')
             best_model = None
             criterion = torch.nn.BCEWithLogitsLoss()
-            optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=5e-4)
+            optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=5e-4)
 
             begin = time()
-            for epoch in range(50):
+            for epoch in range(25 if model_name == 'gcn' else 10):
                 model.train()
                 optimizer.zero_grad()
                 _, y = model(train_data.x.to(device), train_data.edge_index.to(device), edge_index.to(device))
