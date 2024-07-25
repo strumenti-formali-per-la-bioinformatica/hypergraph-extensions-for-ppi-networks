@@ -44,9 +44,16 @@ python3 function_prediction.py --model hypergcn
 
 ### Link Prediction
 
+#### Link Prediction PPI24
+
 ```bash
 python3 link_prediction24.py --model gcn
 python3 link_prediction24.py --model hypergcn
 ```
 
+#### Link Prediction PPI147
 
+```bash
+python3 link_prediction147.py --model gcn
+python3 link_prediction147.py --model hypergcn
+```
