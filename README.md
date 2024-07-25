@@ -1,4 +1,4 @@
-# Hypergraph Extensions for Biololgical Networks
+# Hypergraph Extensions for PPI Networks
 
 ![Static Badge](https://img.shields.io/badge/python-3.10.14-green)
 ![Static Badge](https://img.shields.io/badge/torch-2.0.0%2Bcu121-blue)
