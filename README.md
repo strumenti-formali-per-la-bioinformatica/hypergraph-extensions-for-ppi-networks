@@ -49,6 +49,11 @@ python3 function_prediction.py --model hypergcn
 ```bash
 python3 link_prediction24.py --model gcn
 python3 link_prediction24.py --model hypergcn
+
+# Oppure utilizzando features generate casualmente
+
+python3 link_prediction24.py --random_features --model gcn
+python3 link_prediction24.py --random_features --model hypergcn
 ```
 
 #### Link Prediction PPI147

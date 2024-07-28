@@ -13,11 +13,9 @@ from itertools import combinations
 import matplotlib.pyplot as plt
 import argparse
 
-def main(model_name: str):
+def main(model_name: str, score_function, random_features: bool):
     remove_duplicated = T.RemoveDuplicatedEdges()
     transform = T.RandomLinkSplit(is_undirected=True, num_val=0.25, num_test=0.25)
-
-    score_function = nx.jaccard_coefficient
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'Device: {device}')
@@ -69,11 +67,21 @@ def main(model_name: str):
             criterion = torch.nn.BCEWithLogitsLoss()
             optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=5e-4)
 
+            X_train = train_data.x
+            X_val = val_data.x
+            X_test = test_data.x
+
+            if random_features:
+                print('Random features')
+                X_train = torch.randn_like(X_train)
+                X_val = torch.randn_like(X_val)
+                X_test = torch.randn_like(X_test)
+
             begin = time()
             for epoch in range(25 if model_name == 'gcn' else 10):
                 model.train()
                 optimizer.zero_grad()
-                _, y = model(train_data.x.to(device), train_data.edge_index.to(device), edge_index.to(device))
+                _, y = model(X_train.to(device), train_data.edge_index.to(device), edge_index.to(device))
                 y = y.to("cpu")
                 y = y @ y.t()
                 loss = criterion(y[train_data.edge_label_index[0], train_data.edge_label_index[1]], train_data.edge_label)
@@ -85,7 +93,7 @@ def main(model_name: str):
                 history["train"]["roc_auc"].append(roc_auc)
                 model.eval()
                 with torch.no_grad():
-                    _, y = model(val_data.x.to(device), val_data.edge_index.to(device), edge_index.to(device))
+                    _, y = model(X_val.to(device), val_data.edge_index.to(device), edge_index.to(device))
                     y = y.to("cpu")
                     y = y @ y.t()
                     val_loss = criterion(y[val_data.edge_label_index[0], val_data.edge_label_index[1]], val_data.edge_label)
@@ -109,7 +117,7 @@ def main(model_name: str):
             with torch.no_grad():
                 model.load_state_dict(best_model)
                 model.eval()
-                _, y = model(test_data.x.to(device), test_data.edge_index.to(device), edge_index.to(device))
+                _, y = model(X_test.to(device), test_data.edge_index.to(device), edge_index.to(device))
                 y = y.to("cpu")
                 y = y @ y.t()
                 y = torch.sigmoid(y)
@@ -122,6 +130,17 @@ def main(model_name: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', type=str, default='hypergcn', help='Model to use', required=True, choices=['gcn', 'hypergcn'])
+    parser.add_argument('--random_features', action='store_true')
+    parser.add_argument('--score_function', type=str, help='Score function to use', required=True, choices=['jc', 'aa', 'ra'])
+
     args = parser.parse_args()
+
+    if args.score_function == 'jc':
+        score_function = nx.jaccard_coefficient
+    elif args.score_function == 'aa':
+        score_function = nx.adamic_adar_index
+    elif args.score_function == 'ra':
+        score_function = nx.resource_allocation_index
+    
     model_name = args.model
-    main(model_name)
+    main(model_name, args.random_feature, score_function)

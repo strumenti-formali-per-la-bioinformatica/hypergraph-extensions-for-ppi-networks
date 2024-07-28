@@ -19,7 +19,7 @@ import numpy as np
 
 from sklearn.metrics import roc_auc_score
 
-def main(model_name: str):
+def main(model_name: str, random_features: bool):
     path = osp.join(osp.dirname(osp.realpath(__file__)), 'data', 'PPI')
     data_train = PPI(root=path, split='train')
     data_val = PPI(root=path, split='val')
@@ -59,13 +59,19 @@ def main(model_name: str):
     auc_moving_average = 0
     print('Start training')
 
-    train_edge_index = torch.tensor(pickle.load(open('data/train_edge_index.pkl', 'rb')))
-    val_edge_index = torch.tensor(pickle.load(open('data/val_edge_index.pkl', 'rb')))
-    test_edge_index = torch.tensor(pickle.load(open('data/test_edge_index.pkl', 'rb')))
+    train_edge_index = torch.tensor(pickle.load(open('data/train_edge_index_aa.pkl', 'rb')))
+    val_edge_index = torch.tensor(pickle.load(open('data/val_edge_index_aa.pkl', 'rb')))
+    test_edge_index = torch.tensor(pickle.load(open('data/test_edge_index_aa.pkl', 'rb')))
 
     X_train, edge_index_train, y_train = data_train.x, data_train.edge_index, data_train.y
     X_val, edge_index_val, y_val = data_val.x, data_val.edge_index, data_val.y
     X_test, edge_index_test, y_test = data_test.x, data_test.edge_index, data_test.y
+
+    if random_features:
+        print('Using Random Features')
+        X_train = torch.eye(50)[torch.randint(0, 50, (X_train.shape[0],))]
+        X_val = torch.eye(50)[torch.randint(0, 50, (X_val.shape[0],))]
+        X_test = torch.eye(50)[torch.randint(0, 50, (X_test.shape[0],))]
 
     try:
         begin = time()
@@ -129,12 +135,14 @@ def main(model_name: str):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Function Prediction')
     parser.add_argument('--model', type=str, help='Model to use', choices=['gcn', 'hypergcn'], required=True)
+    parser.add_argument('--random_features', action='store_true', help='Use features')
     
     args = parser.parse_args()
 
     model_name = args.model
+    random_features = args.random_features
 
     logging.basicConfig(level=logging.INFO)
 
-    main(model_name)
+    main(model_name, random_features)
 
